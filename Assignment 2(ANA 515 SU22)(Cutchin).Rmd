@@ -1,0 +1,86 @@
+---
+title: "Assignment 2_Star Wars (ANA515 SU22)(Andrew Cutchin)"
+author: "Andrew Cutchin"
+date: "`r Sys.Date()`"
+output: 
+  word_document: default
+  html_document:
+    theme:
+      bootswatch: slate
+---
+
+```{r , include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r setup, include = FALSE}
+#install.packages("tidyverse")
+#install.packages("knitr")
+#install.packages("bslib")
+```
+
+```{r , include = FALSE}
+library(tidyverse)
+library(knitr)
+library(bslib)
+```
+
+    This data was found on GitHub from fivethirtyeight.  It is a collection of answers to a survey about Star Wars viewership and character preferences.  It is a comma separated values document with each of 1187 respondents identified by a numeric sequence.  There is some basic information about the respondent as well, like gender, age, income range, education, and region.  This is the kind of information that a company like Disney could use to inform character development, analyzing what made certain movies more popular, and what their target audience may be.    
+
+```{r , include = FALSE}
+url <- "https://raw.githubusercontent.com/fivethirtyeight/data/master/star-wars-survey/StarWars.csv"
+starwars_survey <- read_csv(url, locale=locale(encoding="latin1"))
+glimpse(starwars_survey)
+```
+
+<!-- # I used read_csv from the tidyverse package to read the csv from the URL.  It originally returned an error when reading in, making it all one column of data. However I was able to search online for the error and addressed it with the bit of code "locale=locale(encoding="latin1")".  Though I had to play with where to insert it in the command, I was able to get it to read in correctly. -->
+
+<!-- # I used this to inspect the erroneous data that was initially read incorrectly -->
+```{r , include = FALSE}
+str(starwars_survey)
+summary(starwars_survey)
+dim(starwars_survey)
+```
+
+<!-- # This is to rename several columns that were likely checked boxes on the survey. I did it this way so that I could change the data to 0's and 1's in those columns instead of columns named with a number, to do binary analysis.  I could also do this with a set of columns later on which are responses to favorability of characters according to the respondent.  Instead of the numbers for columns I could change it to the character names.  Row 1 contains the names of the characters, in that column, but that is only visible when looking at the top of the data.   -->
+```{r , include = FALSE}
+rename(starwars_survey, "Which of the following Star Wars films have you seen? Please select all that apply. Viewed Episode One"="Which of the following Star Wars films have you seen? Please select all that apply.")
+rename(starwars_survey, "Viewed Episode Two"=...5)
+rename(starwars_survey, "Viewed Episode Three"=...6)
+rename(starwars_survey, "Viewed Episode Four"=...7)
+rename(starwars_survey, "Viewed Episode Five"=...8)
+rename(starwars_survey, "Viewed Episode Six"=...9)
+starwars_survey1<-(rename(starwars_survey, "Which of the following Star Wars films have you seen? Please select all that apply. Viewed Episode One"="Which of the following Star Wars films have you seen? Please select all that apply.", "Viewed Episode Two"=...5, "Viewed Episode Three"=...6, "Viewed Episode Four"=...7, "Viewed Episode Five"=...8, "Viewed Episode Six"=...9))
+```
+
+```{r , include = FALSE}
+select(starwars_survey1, "Have you seen any of the 6 films in the Star Wars franchise?", "Do you consider yourself to be a fan of the Star Wars film franchise?", "Gender", "Age")
+starwars_survey2<-select(starwars_survey1,  "Have you seen any of the 6 films in the Star Wars franchise?", "Do you consider yourself to be a fan of the Star Wars film franchise?", "Gender", "Age" )
+```
+
+This dataframe has `r nrow(starwars_survey2)` rows and `r ncol(starwars_survey2)` columns. The names of the columns and a brief description of each are in the table below:
+
+```{r , include = FALSE}
+starwars_survey1_tbl <- data.frame(
+  Names = c("Have you seen any of the 6 films in the Star Wars franchise?", "Do you consider yourself to be a fan of the Star Wars film franchise?", "Gender", "Age"), 
+  Description = c("Has respondent seen ANY of Episodes 1-6 of Star Wars movies", "Self-identified as a Star Wars fan", "Gender of respondent", "Age of respondent"))
+```
+
+```{r , include = TRUE}
+starwars_survey1_tbl 
+```
+
+```{r , include = FALSE}
+starwars_survey1_pick3 <- select(starwars_survey1, "Do you consider yourself to be a fan of the Star Wars film franchise?", "Age", "Gender")
+```
+
+```{r, include = TRUE}
+Summarytable<-summary(starwars_survey1_pick3) 
+Summarytable
+```
+
+
+
+
+
+
